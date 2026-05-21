@@ -1,4 +1,6 @@
-import { Video } from "lucide-react"; // Ikon Video adalah ikon generik, jadi masih aman digunakan dari Lucide
+'use client';
+import { useState, useEffect } from "react";
+import { Video, ChevronUp } from "lucide-react"; 
 
 // --- KUMPULAN KOMPONEN SVG UNTUK IKON SOSIAL MEDIA ---
 const FacebookIcon = ({ size = 18 }) => (
@@ -23,70 +25,86 @@ const TwitterIcon = ({ size = 18 }) => (
 // ------------------------------------------------------
 
 export default function Footer() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Deteksi scroll untuk menampilkan tombol
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Fungsi klik scroll ke atas
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="bg-slate-900 text-white py-10 mt-0 border-t border-white/5 font-sans">
-      <div className="max-w-7xl mx-auto px-6">
-        
-        {/* BARIS UTAMA (HORIZONTAL & SIMPEL) */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-8 space-y-6 md:space-y-0">
+    <>
+      <footer className="bg-slate-900 text-white py-10 mt-0 border-t border-white/5 font-sans relative z-40">
+        {/* LEBAR FOOTER DISESUAIKAN (max-w-[1600px]) */}
+        <div className="max-w-[1600px] mx-auto px-6">
           
-          {/* SISI KIRI: Alamat & Kontak Utama */}
-          <div className="flex flex-col space-y-2 text-sm text-gray-400">
-            <h3 className="text-base font-extrabold text-white tracking-wide uppercase">
-              TOWN HALL
-            </h3>
-            <p className="leading-relaxed">
-              601 Center Circle, P.O. Box 1309 <br />
-              Silverthorne, CO 80498
-            </p>
-            <p className="text-xs pt-1 font-medium text-gray-500">
-              Telp: (970) 262-7300 | Email: info@silverthorne.org
-            </p>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-8 space-y-6 md:space-y-0">
+            <div className="flex flex-col space-y-2 text-sm text-gray-400">
+              <h3 className="text-base font-extrabold text-white tracking-wide uppercase">TOWN HALL</h3>
+              <p className="leading-relaxed">
+                601 Center Circle, P.O. Box 1309 <br />
+                Silverthorne, CO 80498
+              </p>
+              <p className="text-xs pt-1 font-medium text-gray-500">
+                Telp: (970) 262-7300 | Email: info@silverthorne.org
+              </p>
+            </div>
+
+            <div className="flex flex-col items-start md:items-end space-y-4">
+              <nav>
+                <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold tracking-wider uppercase text-gray-400">
+                  <li><a href="#" className="hover:text-white transition-colors">Emergency Contacts</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Jobs</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Media Center</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                </ul>
+              </nav>
+
+              <div className="flex items-center space-x-4 text-gray-400">
+                <a href="#" className="hover:text-[var(--accent-gold)] transition-colors"><FacebookIcon size={18} /></a>
+                <a href="#" className="hover:text-[var(--accent-gold)] transition-colors"><InstagramIcon size={18} /></a>
+                <a href="#" className="hover:text-[var(--accent-gold)] transition-colors"><TwitterIcon size={18} /></a>
+                <a href="#" className="hover:text-[var(--accent-gold)] transition-colors"><Video size={18} /></a>
+              </div>
+            </div>
           </div>
 
-          {/* SISI KANAN: Tautan Cepat & Media Sosial */}
-          <div className="flex flex-col items-start md:items-end space-y-4">
-            {/* Tautan Horisontal */}
-            <nav>
-              <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold tracking-wider uppercase text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Emergency Contacts</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Jobs</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Media Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-              </ul>
-            </nav>
-
-            {/* Ikon Media Sosial (Menggunakan Komponen SVG Kustom) */}
-            <div className="flex items-center space-x-4 text-gray-400">
-              <a href="#" className="hover:text-[var(--accent-gold)] transition-colors" aria-label="Facebook">
-                <FacebookIcon size={18} />
-              </a>
-              <a href="#" className="hover:text-[var(--accent-gold)] transition-colors" aria-label="Instagram">
-                <InstagramIcon size={18} />
-              </a>
-              <a href="#" className="hover:text-[var(--accent-gold)] transition-colors" aria-label="Twitter">
-                <TwitterIcon size={18} />
-              </a>
-              <a href="#" className="hover:text-[var(--accent-gold)] transition-colors" aria-label="Video">
-                <Video size={18} />
-              </a>
+          <div className="flex flex-col sm:flex-row justify-between items-center pt-6 text-[11px] text-gray-500 tracking-wide">
+            <p className="text-center sm:text-left mb-2 sm:mb-0">
+              &copy; {new Date().getFullYear()} Town of Silverthorne. All Rights Reserved.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="hover:underline">Policies & Accessibility</a>
+              <a href="#" className="hover:underline">Sitemap</a>
             </div>
           </div>
 
         </div>
+      </footer>
 
-        {/* HAK CIPTA / COPYRIGHT BAR */}
-        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 text-[11px] text-gray-500 tracking-wide">
-          <p className="text-center sm:text-left mb-2 sm:mb-0">
-            &copy; {new Date().getFullYear()} Town of Silverthorne. All Rights Reserved.
-          </p>
-          <div className="flex space-x-4">
-            <a href="#" className="hover:underline">Policies & Accessibility</a>
-            <a href="#" className="hover:underline">Sitemap</a>
-          </div>
-        </div>
-
-      </div>
-    </footer>
+      {/* TOMBOL SCROLL TO TOP MELAYANG */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-[var(--primary-color)] hover:bg-[var(--accent-gold)] hover:text-slate-900 text-white p-3 md:p-4 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.3)] transition-all duration-300 group"
+          aria-label="Scroll to top"
+        >
+          <ChevronUp size={24} className="group-hover:-translate-y-1 transition-transform" />
+        </button>
+      )}
+    </>
   );
 }
