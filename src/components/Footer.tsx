@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { Video, ChevronUp } from "lucide-react"; 
+import { usePathname } from 'next/navigation';
 
 // --- KUMPULAN KOMPONEN SVG UNTUK IKON SOSIAL MEDIA ---
 const FacebookIcon = ({ size = 18 }) => (
@@ -25,6 +26,7 @@ const TwitterIcon = ({ size = 18 }) => (
 // ------------------------------------------------------
 
 export default function Footer() {
+  const pathname = usePathname();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Deteksi scroll untuk menampilkan tombol
@@ -44,6 +46,11 @@ export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
+    return null;
+  }
+
+  
 
   return (
     <>

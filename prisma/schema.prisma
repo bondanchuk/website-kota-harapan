@@ -1,0 +1,98 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. TABEL ROLE
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  permissions Json     // Menyimpan hak akses, misal: {"users": ["create", "read", "update", "delete"]}
+  users       User[]   // Relasi balik ke tabel User
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 2. TABEL USER (Diperbarui)
+model User {
+  id        String   @id @default(uuid())
+  name      String   // Tambahan inputan: nama lengkap
+  username  String   @unique
+  email     String   @unique
+  password  String
+  status    Boolean  @default(true) // Tambahan inputan: status aktif/tidak
+  
+  // Relasi ke tabel Role
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 3. TABEL MENU WEB
+model WebMenu {
+  id          String    @id @default(uuid())
+  title       String
+  url         String?
+  order       Int       @default(0)
+  
+  // Relasi Sub-Menu
+  parentId    String?
+  parent      WebMenu?  @relation("MenuToSubmenu", fields: [parentId], references: [id])
+  subMenus    WebMenu[] @relation("MenuToSubmenu")
+  
+  // --- TAMBAHAN BARU UNTUK SETTING LINK ---
+  linkType    String?   // Akan berisi: 'page', 'blog_category', 'gallery_photo', 'gallery_video'
+  linkTarget  String?   // Akan berisi slug/ID dari halaman tujuan
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// --- TABEL KERANGKA UNTUK MODUL SELANJUTNYA ---
+
+// 4. TABEL KATEGORI BLOG
+model BlogCategory {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[] // Relasi: Satu kategori bisa punya banyak berita
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// 5. TABEL HALAMAN WEB
+model WebPage {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String?  @db.Text  // Menyimpan HTML/Teks panjang
+  contentEn   String?  @db.Text  // Menyimpan HTML/Teks bahasa inggris
+  image       String?            // Menyimpan path/URL gambar
+  status      String   @default("draft") // publish atau draft
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 6. TABEL KONTEN BLOG (BERITA/ARTIKEL)
+model BlogPost {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  content     String?      @db.Text
+  contentEn   String?      @db.Text
+  image       String?
+  status      String       @default("draft")
+  views       Int          @default(0) // <-- TAMBAHAN BARU UNTUK BERITA TERPOPULER
+  
+  // Relasi ke Kategori
+  categoryId  String
+  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
