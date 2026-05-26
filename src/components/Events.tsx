@@ -1,3 +1,7 @@
+'use client';
+import { useState, useEffect } from "react";
+import Link from 'next/link';
+
 export default function Events() {
   const events = [
     { date: "30 MEI", time: "09:00 AM - 12:00 PM", title: "Town Cleanup Day" },

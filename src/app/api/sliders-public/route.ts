@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'; // <-- TAMBAHAN KUNCI AGAR MENU SELALU UPDATE
+export const dynamic = 'force-dynamic'; 
 
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
@@ -12,15 +12,13 @@ const prisma = new PrismaClient({ adapter });
 
 export async function GET() {
   try {
-    const menus = await prisma.webMenu.findMany({
-      where: { parentId: null },
-      include: {
-        subMenus: { orderBy: { order: 'asc' } }
-      },
-      orderBy: { order: 'asc' }
+    const sliders = await prisma.slider.findMany({
+      where: { status: 'publish' },
+      orderBy: { order: 'asc' } // Diurutkan berdasarkan angka 'urutan tampil'
     });
-    return NextResponse.json(menus);
+    return NextResponse.json(sliders);
   } catch (error) {
-    return NextResponse.json({ message: 'Gagal memuat menu publik' }, { status: 500 });
+    console.error("Public Sliders API Error:", error);
+    return NextResponse.json({ message: 'Gagal memuat slider publik' }, { status: 500 });
   }
 }

@@ -96,3 +96,32 @@ model BlogPost {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
+
+// 7. TABEL SLIDER / HERO BANNER
+model Slider {
+  id          String   @id @default(uuid())
+  title       String
+  subtitle    String?
+  image       String   // Gambar wajib untuk slider
+  link        String?  // Opsional: URL tujuan jika slider diklik
+  order       Int      @default(0) // Untuk mengatur urutan tayang
+  status      String   @default("publish")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 8. TABEL AGENDA DAN EVENT
+model Agenda {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String?  @db.Text
+  location    String?
+  eventDate   DateTime
+  image       String?
+  status      String   @default("publish")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
